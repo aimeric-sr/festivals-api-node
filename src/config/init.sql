@@ -1,4 +1,4 @@
-CREATE DATABASE test WITH OWNER = aimericsorin;
+CREATE DATABASE sql_festivals WITH OWNER = aimericsorin;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- column role in user with foreign key to roles table
@@ -18,7 +18,7 @@ CREATE TABLE ARTISTS(
     music_styles VARCHAR(100) NOT NULL,
     user_id uuid NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES USERS (id)
+    FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE
 );
 
 CREATE TABLE EVENTS(
@@ -29,5 +29,5 @@ CREATE TABLE EVENTS(
     finish_date timestamp with time zone NOT NULL,
     user_id uuid NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES USERS (id)
+    FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE
 );
