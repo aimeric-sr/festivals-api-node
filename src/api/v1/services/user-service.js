@@ -1,5 +1,5 @@
-//couche service, peu important pour l'instant mais devient indispensable si l'API devient plus complexe
 const userRepository = require('../repositories/user-repository');
+const bcrypt = require('bcryptjs');
 
 class UserService {
     async getUser(id) {
@@ -11,11 +11,13 @@ class UserService {
     }
 
     async createUser(username, password, email) {
-        return userRepository.createUser(username, password, email);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return userRepository.createUser(username, hashedPassword, email);
     }
 
     async updateUser(id, username, password, email) {
-        return userRepository.updateUser(id, username, password, email);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return userRepository.updateUser(id, username, hashedPassword, email);
     }
 
     async deleteUser(id) {

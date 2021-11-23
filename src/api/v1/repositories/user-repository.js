@@ -4,7 +4,7 @@ class UserRepository {
     async getUser(id) {
         return await pool.query('SELECT * FROM public.users WHERE id=$1;',[id])
             .then(res => res)
-            .catch(err => console.log(err.message));
+            .catch(err => console.log(err.message.toUpperCase()));
     }
 
     async getUsers() {
@@ -14,7 +14,7 @@ class UserRepository {
     }
 
     async createUser(username, password, email) {
-        return await pool.query('INSERT INTO public.users(username, password, email) VALUES ($1, $2, $3);',
+        return await pool.query('INSERT INTO public.users(username, password, email) VALUES ($1, $2, $3) returning id;',
             [username, password, email])
             .then(res => res)
             .catch(err => console.log(err));
