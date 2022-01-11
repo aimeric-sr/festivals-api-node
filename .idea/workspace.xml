@@ -4,15 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d14ea971-e7b8-49c1-916c-2ce880e08e5b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DockerFile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Setup.MD" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/v1/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/config/database-connection.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/config/init.sql" afterDir="false" />
+    <list default="true" id="d14ea971-e7b8-49c1-916c-2ce880e08e5b" name="Changes" comment="typescript API">
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/artist-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/auth-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/event-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/follow-artist-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/follow-event-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/performing-event-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/controllers/user-controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/artist-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/auth-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/event-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/follow-artist-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/follow-event-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/performing-event-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/repositories/user-repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/routes/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/artist-service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/auth-service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/event-service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/follow-artist-service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/follow-event-service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/performing-event-service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/v1/services/user-service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DockerFile" beforeDir="false" afterPath="$PROJECT_DIR$/DockerFile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/v1/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/v1/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/database-connection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/database-connection.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,22 +92,22 @@
       <recent name="$PROJECT_DIR$/src/api/v1/routes/artists" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follow/event" />
-      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follow/artist" />
-      <recent name="$PROJECT_DIR$/src/api/v1/routes/artists/perform" />
-      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follows" />
-      <recent name="$PROJECT_DIR$/src/api/v1/routes/users" />
+      <recent name="$PROJECT_DIR$/src/api/v1/controllers" />
+      <recent name="$PROJECT_DIR$/src/api/v1/middlewares" />
+      <recent name="$PROJECT_DIR$/src/api/v1/repositories" />
+      <recent name="$PROJECT_DIR$/src/api/v1/routes" />
+      <recent name="$PROJECT_DIR$/src/api/v1/services" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="user-repository.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/api/v1/repositories/user-repository.js" working-dir="$PROJECT_DIR$/src/api/v1/repositories">
+    <configuration name="user-repository.ts" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/api/v1/repositories/user-repository.ts" working-dir="$PROJECT_DIR$/src/api/v1/repositories">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Node.js.user-repository.js" />
-        <item itemvalue="Node.js.user-repository.js" />
-        <item itemvalue="Node.js.user-repository.js" />
+        <item itemvalue="Node.js.user-repository.ts" />
+        <item itemvalue="Node.js.user-repository.ts" />
+        <item itemvalue="Node.js.user-repository.ts" />
       </list>
     </recent_temporary>
   </component>
@@ -252,7 +272,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641401387558</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="typescript API">
+      <created>1641923980718</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1641923980718</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -284,7 +311,8 @@
     <MESSAGE value="test to deploy api" />
     <MESSAGE value="test to deploy api v2" />
     <MESSAGE value="new file Deployment.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="new file Deployment.md" />
+    <MESSAGE value="typescript API" />
+    <option name="LAST_COMMIT_MESSAGE" value="typescript API" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
