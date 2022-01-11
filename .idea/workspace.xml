@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d14ea971-e7b8-49c1-916c-2ce880e08e5b" name="Changes" comment="new file Deployment.md" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="21EsGrmYws6b5tCqtekmwffBMoP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="postgresql" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/api/v1/routes/users/follows" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="SQL Resolution Scopes" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follows" />
+      <recent name="$PROJECT_DIR$/src/api/v1/controllers" />
+      <recent name="$PROJECT_DIR$/src/api/v1/services" />
+      <recent name="$PROJECT_DIR$/src/api/v1/repositories" />
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/artists" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follow/event" />
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follow/artist" />
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/artists/perform" />
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/users/follows" />
+      <recent name="$PROJECT_DIR$/src/api/v1/routes/users" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="user-repository.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/api/v1/repositories/user-repository.js" working-dir="$PROJECT_DIR$/src/api/v1/repositories">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.user-repository.js" />
+        <item itemvalue="Node.js.user-repository.js" />
+        <item itemvalue="Node.js.user-repository.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d14ea971-e7b8-49c1-916c-2ce880e08e5b" name="Changes" comment="" />
+      <created>1637517488513</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1637517488513</updated>
+      <workItem from="1637517489876" duration="4489000" />
+      <workItem from="1637530969651" duration="4471000" />
+      <workItem from="1637605222474" duration="4105000" />
+      <workItem from="1637655413778" duration="10461000" />
+      <workItem from="1637674248229" duration="2034000" />
+      <workItem from="1637682952609" duration="6241000" />
+      <workItem from="1637922822378" duration="1995000" />
+      <workItem from="1637925033695" duration="862000" />
+      <workItem from="1638033410165" duration="3935000" />
+      <workItem from="1638874454143" duration="627000" />
+      <workItem from="1638894555253" duration="5854000" />
+      <workItem from="1638902563269" duration="281000" />
+      <workItem from="1638947809850" duration="7276000" />
+      <workItem from="1638956414227" duration="4709000" />
+      <workItem from="1638965101726" duration="1763000" />
+      <workItem from="1638968562590" duration="16000" />
+      <workItem from="1638968598726" duration="111000" />
+      <workItem from="1638968729998" duration="149000" />
+      <workItem from="1638969094072" duration="16000" />
+      <workItem from="1638971166255" duration="10091000" />
+      <workItem from="1639047389690" duration="7279000" />
+      <workItem from="1639061778362" duration="7758000" />
+      <workItem from="1639123923014" duration="4152000" />
+      <workItem from="1639143091995" duration="1882000" />
+      <workItem from="1639160280451" duration="2651000" />
+      <workItem from="1639228560414" duration="2086000" />
+      <workItem from="1639562040556" duration="5733000" />
+      <workItem from="1639640972747" duration="4226000" />
+      <workItem from="1639662546563" duration="1315000" />
+      <workItem from="1639751799671" duration="853000" />
+      <workItem from="1639764181325" duration="3914000" />
+      <workItem from="1639830400424" duration="2531000" />
+      <workItem from="1639849727406" duration="2824000" />
+      <workItem from="1640021882890" duration="3029000" />
+      <workItem from="1640078734618" duration="3262000" />
+      <workItem from="1640265772356" duration="1095000" />
+      <workItem from="1640714001796" duration="1791000" />
+      <workItem from="1640799001470" duration="229000" />
+      <workItem from="1640803581982" duration="161000" />
+      <workItem from="1640811580196" duration="1952000" />
+      <workItem from="1641212728905" duration="1229000" />
+      <workItem from="1641283858771" duration="6415000" />
+      <workItem from="1641373647509" duration="1192000" />
+      <workItem from="1641386517639" duration="4450000" />
+      <workItem from="1641401800724" duration="423000" />
+      <workItem from="1641541819953" duration="2438000" />
+      <workItem from="1641800889181" duration="2343000" />
+    </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <created>1637521554921</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1637521554921</updated>
+    </task>
+    <task id="LOCAL-00002" summary="CRUD user">
+      <created>1637608955365</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1637608955365</updated>
+    </task>
+    <task id="LOCAL-00003" summary="just access token">
+      <created>1637673900572</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1637673900572</updated>
+    </task>
+    <task id="LOCAL-00004" summary="just access token">
+      <created>1637673939001</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1637673939001</updated>
+    </task>
+    <task id="LOCAL-00005" summary="refresh token">
+      <created>1637689257727</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1637689257727</updated>
+    </task>
+    <task id="LOCAL-00006" summary="role auth">
+      <created>1638902412173</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1638902412173</updated>
+    </task>
+    <task id="LOCAL-00007" summary="first push">
+      <created>1638902748441</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1638902748441</updated>
+    </task>
+    <task id="LOCAL-00008" summary="artists and events routes">
+      <created>1638974256987</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1638974256987</updated>
+    </task>
+    <task id="LOCAL-00009" summary="follow artist, event and add artist to event">
+      <created>1639051355944</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1639051355944</updated>
+    </task>
+    <task id="LOCAL-00010" summary="send nested json generated in postgresql">
+      <created>1639063506354</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1639063506354</updated>
+    </task>
+    <task id="LOCAL-00011" summary="basic authorization">
+      <created>1639126806051</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1639126806052</updated>
+    </task>
+    <task id="LOCAL-00012" summary="test to deploy api">
+      <created>1640803718934</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1640803718934</updated>
+    </task>
+    <task id="LOCAL-00013" summary="test to deploy api v2">
+      <created>1640811666594</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1640811666594</updated>
+    </task>
+    <task id="LOCAL-00014" summary="new file Deployment.md">
+      <created>1641401354086</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1641401354086</updated>
+    </task>
+    <task id="LOCAL-00015" summary="new file Deployment.md">
+      <created>1641401387558</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1641401387558</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <MESSAGE value="CRUD user" />
+    <MESSAGE value="just access token" />
+    <MESSAGE value="refresh token" />
+    <MESSAGE value="role auth" />
+    <MESSAGE value="first push" />
+    <MESSAGE value="artists and events routes" />
+    <MESSAGE value="follow artist, event and add artist to event" />
+    <MESSAGE value="send nested json generated in postgresql" />
+    <MESSAGE value="basic authorization" />
+    <MESSAGE value="test to deploy api" />
+    <MESSAGE value="test to deploy api v2" />
+    <MESSAGE value="new file Deployment.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="new file Deployment.md" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
