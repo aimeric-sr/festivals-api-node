@@ -1,4 +1,4 @@
-import {pool} from '../../../config/database-connection';
+import pool from '../../../config/database-connection';
 
 class EventRepository {
     async getEvent(id: number) {

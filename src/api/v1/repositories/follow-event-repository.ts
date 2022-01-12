@@ -1,4 +1,4 @@
-import {pool} from '../../../config/database-connection';
+import pool from '../../../config/database-connection';
 
 class FollowEventRepository {
     async addFollowEvent(user_id: number, event_id: number) {

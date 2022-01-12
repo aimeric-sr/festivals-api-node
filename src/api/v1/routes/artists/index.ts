@@ -1,16 +1,15 @@
 import {Router} from 'express';
+import {artistController} from '../../controllers/artist-controller';
+import performingEventRouter from './perform';
+import {authenticate} from '../../middlewares/authenticateToken/authenticate-token';
+
 const router = Router();
 
-const artistController = require('../../controllers/artist-controller');
-const performingEventRouter = require('./perform');
-const auth = require('../../middlewares/authenticateToken/authenticate-token');
-
 router.use('/perform-event', performingEventRouter);
-
-router.get('/:id', auth.authRole('BASIC'), artistController.getArtist);
-router.get('/' , auth.authRole('BASIC'), artistController.getArtists);
-router.post('/', auth.authRole('ADMIN'), artistController.createArtist);
-router.put('/:id', auth.authRole('ADMIN'), artistController.updateArtist);
-router.delete('/:id', auth.authRole('ADMIN'), artistController.deleteArtist);
+router.get('/:id', authenticate.authRole('BASIC'), artistController.getArtist);
+router.get('/' , authenticate.authRole('BASIC'), artistController.getArtists);
+router.post('/', authenticate.authRole('ADMIN'), artistController.createArtist);
+router.put('/:id', authenticate.authRole('ADMIN'), artistController.updateArtist);
+router.delete('/:id', authenticate.authRole('ADMIN'), artistController.deleteArtist);
 
 export default router

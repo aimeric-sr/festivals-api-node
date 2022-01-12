@@ -1,4 +1,4 @@
-import {pool} from '../../../config/database-connection';
+import pool from '../../../config/database-connection';
 
 class PerformingEventRepository {
     async addPerformingEvent(artist_id: number, event_id: number) {

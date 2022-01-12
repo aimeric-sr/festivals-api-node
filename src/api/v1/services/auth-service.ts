@@ -8,7 +8,7 @@ const env = process.env;
 
 class AuthService {
     async login(username: string, password: string) {
-        const user = await authRepository.getUserByUsername(username);
+        const user: any = await authRepository.getUserByUsername(username);
         if (user.rowCount === 0) {
             return user;
         } else {
@@ -28,12 +28,12 @@ class AuthService {
     }
 
     async getAccessToken(refreshToken: string) {
-        const resAccessToken = await authRepository.searchRefreshToken(refreshToken);
+        const resAccessToken: any = await authRepository.searchRefreshToken(refreshToken);
         let currentAccessToken=null;
         if (resAccessToken.rowCount === 0) {
             return {rowCount: 0};
         } else {
-            jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, user) => {
+            jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err: any, user: any) => {
                 if (err) {
                     console.log(err);
                 }

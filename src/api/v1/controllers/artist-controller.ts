@@ -1,14 +1,15 @@
+import {Request, Response, NextFunction} from "express"
+import {artistService} from '../services/artist-service';
+import ApiError from '../middlewares/errors/api-error';
 
-const artistService = require('../services/artist-service');
-const ApiError = require('../middlewares/errors/api-error');
 const dotenv = require('dotenv');
 dotenv.config();
 
 class ArtistController {
-    async getArtist(req, res, next) {
+    async getArtist(req: Request, res: Response, next: NextFunction) {
         try {
-            const id = req.params.id;
-            const user = await artistService.getArtist(id);
+            const id: string = req.params.id;
+            const user = await artistService.getArtist(parseInt(id));
             if (user.code === '22P02') {
                 next(ApiError.badRequest('wrong format identifier for artist UUID'));
             }
@@ -20,9 +21,9 @@ class ArtistController {
         }
     }
 
-    async getArtists(req, res, next) {
+    async getArtists(req: Request, res: Response, next: NextFunction) {
         try {
-            const users = await artistService.getArtists();
+            const users: any = await artistService.getArtists();
             if (users.rows.length === 0) {
                 next(ApiError.notFound('no artists found'));
             } else {
@@ -33,7 +34,7 @@ class ArtistController {
         }
     }
 
-    async createArtist(req, res, next) {
+    async createArtist(req: Request, res: Response, next: NextFunction) {
         try {
             console.log(req.body);
             const {name, nationality, music_styles} = req.body;
@@ -45,11 +46,11 @@ class ArtistController {
         }
     }
 
-    async updateArtist(req, res, next) {
+    async updateArtist(req: Request, res: Response, next: NextFunction) {
         try {
             const id = req.params.id;
             const {name, nationality, music_styles} = req.body;
-            const rowUpdated = await artistService.updateArtist(id, name, nationality, music_styles);
+            const rowUpdated: any = await artistService.updateArtist(parseInt(id), name, nationality, music_styles);
             if (rowUpdated.rowCount === 0) {
                 next(ApiError.notFound('no artist found with this id, can\'t update it'));
             } else res.status(200).json();
@@ -58,10 +59,10 @@ class ArtistController {
         }
     }
 
-    async deleteArtist(req, res, next) {
+    async deleteArtist(req: Request, res: Response, next: NextFunction) {
         try {
             const id = req.params.id;
-            const rowDeleted = await artistService.deleteArtist(id);
+            const rowDeleted: any = await artistService.deleteArtist(parseInt(id));
             if (rowDeleted.rowCount === 0) {
                 next(ApiError.notFound('no artist found with this id, can\'t delete it'));
             } else res.status(204).json();
@@ -71,4 +72,4 @@ class ArtistController {
     }
 }
 
-exports const new ArtistController();
+export const artistController = new ArtistController();

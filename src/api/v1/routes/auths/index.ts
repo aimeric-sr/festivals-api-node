@@ -1,8 +1,8 @@
 import {Router} from 'express';
-const router = Router();
+import {userController} from '../../controllers/user-controller';
+import {authController} from '../../controllers/auth-controller';
 
-const userController = require('../../controllers/user-controller');
-const authController = require('../../controllers/auth-controller');
+const router = Router();
 
 router.post('/register', userController.createUser);
 router.post('/login', authController.login);

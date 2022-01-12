@@ -1,10 +1,10 @@
 import {Router} from 'express';
+import {performingEventController} from '../../../controllers/performing-event-controller';
+import {authenticate} from '../../../middlewares/authenticateToken/authenticate-token';
+
 const router = Router();
 
-const performingEventController = require('../../controllers/performing-event-controller');
-const auth = require('../../middlewares/authenticateToken/authenticate-token');
-
-router.post('/', auth.authRole('ADMIN'), performingEventController.addPerformingEvent);
-router.delete('/', auth.authRole('ADMIN'), performingEventController.delPerformingEvent);
+router.post('/', authenticate.authRole('ADMIN'), performingEventController.addPerformingEvent);
+router.delete('/', authenticate.authRole('ADMIN'), performingEventController.delPerformingEvent);
 
 export default router

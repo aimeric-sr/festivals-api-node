@@ -1,9 +1,10 @@
-const express = require('express');
-const routerUser = require('./users');
-const routerEvent = require('./events');
-const routerArtist = require('./artists');
-const routerAuth = require('./auths');
-const router = express.Router();
+import {Router} from 'express';
+import routerUser from './users';
+import routerEvent from './events';
+import routerArtist from './artists';
+import routerAuth from './auths';
+
+const router = Router();
 
 router.use('/users', routerUser);
 router.use('/events', routerEvent);

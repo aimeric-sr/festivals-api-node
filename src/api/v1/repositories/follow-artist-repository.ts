@@ -1,4 +1,4 @@
-import {pool} from '../../../config/database-connection';
+import pool from '../../../config/database-connection';
 
 class FollowArtistRepository {
     async addFollowArtist(user_id: number, artist_id: number) {

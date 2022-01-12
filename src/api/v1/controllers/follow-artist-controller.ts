@@ -1,10 +1,12 @@
-const followArtistService = require('../services/follow-artist-service');
-const ApiError = require('../middlewares/errors/api-error');
+import {Request, Response, NextFunction} from "express"
+import {followArtistService} from '../services/follow-artist-service';
+import ApiError from '../middlewares/errors/api-error';
+
 const dotenv = require('dotenv');
 dotenv.config();
 
 class FollowArtistController {
-    async addFollowArtist(req, res, next) {
+    async addFollowArtist(req: Request, res: Response, next: NextFunction) {
         try {
             const {user_id, artist_id} = req.body;
             const rowCreated = await followArtistService.addFollowArtist(user_id, artist_id);
@@ -15,7 +17,7 @@ class FollowArtistController {
         }
     }
 
-    async delFollowArtist(req, res, next) {
+    async delFollowArtist(req: Request, res: Response, next: NextFunction) {
         try {
             const {user_id, artist_id} = req.body;
             const rowDeleted = await followArtistService.delFollowArtist(user_id, artist_id);
@@ -28,4 +30,4 @@ class FollowArtistController {
     }
 }
 
-module.exports = new FollowArtistController();
+export const followArtistController = new FollowArtistController();

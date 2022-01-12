@@ -1,12 +1,12 @@
-import {NextFunction} from "express";
-
-const jwt = require('jsonwebtoken');
+import {Request, Response, NextFunction} from "express";
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
+
 class Authenticate{
     authRole(roleGiven: string){
-        return async (req: any, res: any, next: NextFunction) => {
+        return async (req: any, res: Response, next: NextFunction) => {
             const authHeader = req.headers['authorization'];
             if (authHeader===undefined){
                 return res.status(403).json('no token provided');
@@ -15,10 +15,11 @@ class Authenticate{
             if (token==null){
                 return res.status(401).json('no token given after the Bearer keyword');
             }
-            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err: any, user: any) => {
                 if (err) {
                     return res.status(403).json('bad token');
-                }
+                };
                 req.user = user;
                 //can access all routes
                 if(user.role==='ADMIN'){
@@ -35,4 +36,4 @@ class Authenticate{
     }
 }
 
-module.exports = new Authenticate();
+export const authenticate = new Authenticate();

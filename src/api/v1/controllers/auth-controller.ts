@@ -1,12 +1,15 @@
-const authService = require("../services/auth-service");
-const ApiError = require("../middlewares/errors/api-error");
+import {Request, Response, NextFunction} from "express"
+import {authService} from "../services/auth-service";
+import ApiError from '../middlewares/errors/api-error';
+
+
 
 class AuthController {
-    async login(req, res, next) {
+    async login(req: Request, res: Response, next: NextFunction) {
         try {
             console.log(req.body)
             const {username, password} = req.body;
-            const user = await authService.login(username, password);
+            const user: any = await authService.login(username, password);
             if (user.rowCount === 0) {
                 next(ApiError.notFound('no user found with this username, please try another'));
             }
@@ -20,7 +23,7 @@ class AuthController {
         }
     }
 
-    async getToken(req, res, next) {
+    async getToken(req: Request, res: Response, next: NextFunction) {
         try {
             const refreshToken = req.body.refreshToken;
             const accessToken = await authService.getAccessToken(refreshToken);
@@ -34,10 +37,10 @@ class AuthController {
         }
     }
 
-    async logout(req, res, next) {
+    async logout(req: Request, res: Response, next: NextFunction) {
         try {
             const refreshToken = req.body.refreshToken;
-            const deletedToken = await authService.logout(refreshToken);
+            const deletedToken: any = await authService.logout(refreshToken);
             if (deletedToken.rowCount === 0) {
                 next(ApiError.notFound('no refresh token find, can\'t delete it'));
             } else {
@@ -49,4 +52,4 @@ class AuthController {
     }
 }
 
-module.exports = new AuthController();
+export const authController = new AuthController();

@@ -1,10 +1,12 @@
-const followEventService = require('../services/follow-event-service');
-const ApiError = require('../middlewares/errors/api-error');
+import {Request, Response, NextFunction} from "express"
+import {followEventService} from '../services/follow-event-service';
+import ApiError from '../middlewares/errors/api-error';
+
 const dotenv = require('dotenv');
 dotenv.config();
 
 class FollowEventController {
-    async addFollowEvent(req, res, next) {
+    async addFollowEvent(req: Request, res: Response, next: NextFunction) {
         try {
             const {user_id, event_id} = req.body;
             const rowCreated = await followEventService.addFollowEvent(user_id, event_id);
@@ -15,7 +17,7 @@ class FollowEventController {
         }
     }
 
-    async delFollowEvent(req, res, next) {
+    async delFollowEvent(req: Request, res: Response, next: NextFunction) {
         try {
             const {user_id, event_id} = req.body;
             const rowDeleted = await followEventService.delFollowEvent(user_id, event_id);
@@ -28,4 +30,4 @@ class FollowEventController {
     }
 }
 
-module.exports = new FollowEventController();
+export const followEventController = new FollowEventController();

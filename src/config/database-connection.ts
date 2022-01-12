@@ -1,5 +1,5 @@
-import { Pool} from 'pg';
+import { Pool } from 'pg';
 //use .env variable
-export const pool = new Pool();
+const pool = new Pool();
 
-module.exports = pool;
+export default pool;

@@ -1,10 +1,12 @@
-const performingEventService = require('../services/performing-event-service');
-const ApiError = require('../middlewares/errors/api-error');
+import {Request, Response, NextFunction} from "express"
+import {performingEventService} from '../services/performing-event-service';
+import ApiError from '../middlewares/errors/api-error';
+
 const dotenv = require('dotenv');
 dotenv.config();
 
 class PerformingEventController {
-    async addPerformingEvent(req, res, next) {
+    async addPerformingEvent(req: Request, res: Response, next: NextFunction) {
         try {
             const {artist_id, event_id} = req.body;
             const rowCreated = await performingEventService.addPerformingEvent(artist_id, event_id);
@@ -15,7 +17,7 @@ class PerformingEventController {
         }
     }
 
-    async delPerformingEvent(req, res, next) {
+    async delPerformingEvent(req: Request, res: Response, next: NextFunction) {
         try {
             const {artist_id, event_id} = req.body;
             const rowDeleted = await performingEventService.delPerformingEvent(artist_id, event_id);
@@ -28,4 +30,4 @@ class PerformingEventController {
     }
 }
 
-module.exports = new PerformingEventController();
+export const performingEventController = new PerformingEventController();
