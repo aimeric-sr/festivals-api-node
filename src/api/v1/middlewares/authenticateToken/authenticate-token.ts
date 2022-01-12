@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 class Authenticate{
     authRole(roleGiven: string){
         return async (req: any, res: Response, next: NextFunction) => {
@@ -15,8 +14,14 @@ class Authenticate{
             if (token==null){
                 return res.status(401).json('no token given after the Bearer keyword');
             }
-
-            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err: any, user: any) => {
+            var refreshToken: string 
+            if (process.env.ACCESS_TOKEN_SECRET) {
+                refreshToken = process.env.ACCESS_TOKEN_SECRET
+            }else {
+                refreshToken = ""
+            }
+            
+            jwt.verify(token, refreshToken, (err: any, user: any) => {
                 if (err) {
                     return res.status(403).json('bad token');
                 };
