@@ -1,12 +1,13 @@
 import {Router} from 'express';
-import {userController} from '../../controllers/user-controller';
-import {authController} from '../../controllers/auth-controller';
+import {userController} from '../../controllers/user';
+import {authController} from '../../controllers/auth';
+import {checkRole} from '../../middlewares/auth/checkRole';
 
-const router = Router();
+const routerAuth = Router();
 
-router.post('/register', userController.createUser);
-router.post('/login', authController.login);
-router.post('/token', authController.getToken);
-router.post('/logout', authController.logout);
+routerAuth.post('/register', [checkRole(['NOAUTH'])] ,userController.createUser);
+routerAuth.post('/login', authController.login);
+routerAuth.post('/token', authController.getToken);
+routerAuth.post('/logout', authController.logout);
 
-export default router
+export {routerAuth}

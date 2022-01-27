@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.routerFollowArtist = void 0;
+const express_1 = require("express");
+const follow_artist_1 = require("../../../../controllers/follow-artist");
+const checkJWT_1 = require("../../../../middlewares/auth/checkJWT");
+const checkRole_1 = require("../../../../middlewares/auth/checkRole");
+const routerFollowArtist = (0, express_1.Router)();
+exports.routerFollowArtist = routerFollowArtist;
+routerFollowArtist.post('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], follow_artist_1.followArtistController.addFollowArtist);
+routerFollowArtist.delete('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], follow_artist_1.followArtistController.delFollowArtist);

@@ -1,10 +1,11 @@
 import {Router} from 'express';
-import {followEventController} from '../../../../controllers/follow-event-controller';
-import {authenticate} from '../../../../middlewares/authenticateToken/authenticate-token';
+import {followEventController} from '../../../../controllers/follow-event';
+import {checkJWT} from '../../../../middlewares/auth/checkJWT';
+import {checkRole} from '../../../../middlewares/auth/checkRole';
 
-const router = Router();
+const routerFollowEvent = Router();
 
-router.post('/', authenticate.authRole('BASIC'), followEventController.addFollowEvent);
-router.delete('/', authenticate.authRole('BASIC'), followEventController.delFollowEvent);
+routerFollowEvent.post('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])], followEventController.addFollowEvent);
+routerFollowEvent.delete('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])] , followEventController.delFollowEvent);
 
-export default router
+export { routerFollowEvent }

@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const event_1 = require("../../controllers/event");
+const checkJWT_1 = require("../../middlewares/auth/checkJWT");
+const checkRole_1 = require("../../middlewares/auth/checkRole");
+const router = (0, express_1.Router)();
+router.get('/:id', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], event_1.eventController.getEvent);
+router.get('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], event_1.eventController.getEvents);
+router.post('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN'])], event_1.eventController.createEvent);
+router.put('/:id', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN'])], event_1.eventController.updateEvent);
+router.delete('/:id', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN'])], event_1.eventController.deleteEvent);
+exports.default = router;

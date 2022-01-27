@@ -1,13 +1,14 @@
 import {Router} from 'express';
-import {eventController} from '../../controllers/event-controller';
-import {authenticate} from '../../middlewares/authenticateToken/authenticate-token';
+import {eventController} from '../../controllers/event';
+import {checkJWT} from '../../middlewares/auth/checkJWT';
+import {checkRole} from '../../middlewares/auth/checkRole';
 
-const router = Router();
+const routerEvents = Router();
 
-router.get('/:id', authenticate.authRole('BASIC'), eventController.getEvent);
-router.get('/', authenticate.authRole('BASIC'),eventController.getEvents);
-router.post('/', authenticate.authRole('ADMIN'), eventController.createEvent);
-router.put('/:id', authenticate.authRole('ADMIN'), eventController.updateEvent);
-router.delete('/:id', authenticate.authRole('ADMIN'), eventController.deleteEvent);
+routerEvents.get('/:id', [checkJWT, checkRole(['ADMIN', 'BASIC'])], eventController.getEvent);
+routerEvents.get('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])],eventController.getEvents);
+routerEvents.post('/', [checkJWT, checkRole(['ADMIN'])], eventController.createEvent);
+routerEvents.put('/:id', [checkJWT, checkRole(['ADMIN'])], eventController.updateEvent);
+routerEvents.delete('/:id', [checkJWT, checkRole(['ADMIN'])], eventController.deleteEvent);
 
-export default router
+export {routerEvents}

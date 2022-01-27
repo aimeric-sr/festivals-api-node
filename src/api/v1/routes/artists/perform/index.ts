@@ -1,10 +1,11 @@
 import {Router} from 'express';
-import {performingEventController} from '../../../controllers/performing-event-controller';
-import {authenticate} from '../../../middlewares/authenticateToken/authenticate-token';
+import {performingEventController} from '../../../controllers/performing-event';
+import {checkJWT} from '../../../middlewares/auth/checkJWT';
+import {checkRole} from '../../../middlewares/auth/checkRole';
 
-const router = Router();
+const routerArtistPerform = Router();
 
-router.post('/', authenticate.authRole('ADMIN'), performingEventController.addPerformingEvent);
-router.delete('/', authenticate.authRole('ADMIN'), performingEventController.delPerformingEvent);
+routerArtistPerform.post('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])], performingEventController.addPerformingEvent);
+routerArtistPerform.delete('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])] , performingEventController.delPerformingEvent);
 
-export default router
+export {routerArtistPerform}

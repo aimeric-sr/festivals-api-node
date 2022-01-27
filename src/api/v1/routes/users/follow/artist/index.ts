@@ -1,10 +1,11 @@
 import {Router} from 'express';
-import {followArtistController} from '../../../../controllers/follow-artist-controller';
-import {authenticate} from '../../../../middlewares/authenticateToken/authenticate-token';
+import {followArtistController} from '../../../../controllers/follow-artist';
+import {checkJWT} from '../../../../middlewares/auth/checkJWT';
+import {checkRole} from '../../../../middlewares/auth/checkRole';
 
-const router = Router();
+const routerFollowArtist = Router();
 
-router.post('/', authenticate.authRole('BASIC'), followArtistController.addFollowArtist);
-router.delete('/', authenticate.authRole('BASIC'), followArtistController.delFollowArtist);
+routerFollowArtist.post('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])], followArtistController.addFollowArtist);
+routerFollowArtist.delete('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])], followArtistController.delFollowArtist);
 
-export default router
+export { routerFollowArtist }

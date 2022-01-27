@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.routerV1 = void 0;
+const express_1 = require("express");
+const users_1 = require("./users");
+const events_1 = __importDefault(require("./events"));
+const artists_1 = __importDefault(require("./artists"));
+const auths_1 = __importDefault(require("./auths"));
+const _404_1 = require("./pages/404");
+const root_1 = require("./pages/root");
+const routerV1 = (0, express_1.Router)();
+exports.routerV1 = routerV1;
+routerV1.use('/users', users_1.routerUsers);
+routerV1.use('/events', events_1.default);
+routerV1.use('/artists', artists_1.default);
+routerV1.use('/auth', auths_1.default);
+routerV1.use(root_1.routerRoot);
+routerV1.use(_404_1.router404);

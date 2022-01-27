@@ -1,24 +1,26 @@
-import {Router} from 'express';
-import {userController} from '../../controllers/user-controller';
-import {authenticate} from '../../middlewares/authenticateToken/authenticate-token';
-import followArtistRouter from './follow/artist';
-import followEventRouter from './follow/event';
+import { Router } from 'express';
+import {userController} from '../../controllers/user';
+import {checkJWT} from '../../middlewares/auth/checkJWT';
+import {checkRole} from '../../middlewares/auth/checkRole';
+import {routerFollowArtist} from './follow/artist/index';
+import {routerFollowEvent} from './follow/event/index';
 
-const router = Router();
+const routerUsers = Router();
 
-router.use('/follow-artist', followArtistRouter);
-router.use('/follow-event', followEventRouter);
+routerUsers.use('/follow-artist', routerFollowArtist);
+routerUsers.use('/follow-event', routerFollowEvent);
 
-router.get('/artists', authenticate.authRole('BASIC') ,userController.getUsersIncludingArtists);
-router.get('/events' , authenticate.authRole('BASIC'),userController.getUsersIncludingEvents);
-router.get('/all' ,userController.getUsersIncluding);
-router.get('/all/:id', authenticate.authRole('BASIC') ,userController.getUserIncluding);
+routerUsers.get('/artists', [checkJWT, checkRole(['ADMIN', 'BASIC'])] ,userController.getUsersIncludingArtists);
 
-router.get('/:id', authenticate.authRole('BASIC'), userController.getUser);
-router.get('/', authenticate.authRole('BASIC'),userController.getUsers);
-//router.post('/', userController.createUser);
-router.put('/:id',  authenticate.authRole('BASIC'), userController.updateUser);
-router.delete('/:id', authenticate.authRole('BASIC'), userController.deleteUser);
+routerUsers.get('/events' , [checkJWT, checkRole(['ADMIN', 'BASIC'])] ,userController.getUsersIncludingEvents);
+routerUsers.get('/all' ,userController.getUsersIncluding);
+routerUsers.get('/all/:id', [checkJWT, checkRole(['ADMIN', 'BASIC'])] ,userController.getUserIncluding);
 
-export default router
+routerUsers.get('/:id', [checkJWT, checkRole(['ADMIN', 'BASIC'])], userController.getUser);
+routerUsers.get('/', [checkJWT, checkRole(['ADMIN', 'BASIC'])],userController.getUsers);
+//routerUsers.post('/', userController.createUser);
+routerUsers.put('/:id',  [checkJWT, checkRole(['ADMIN', 'BASIC'])], userController.updateUser);
+routerUsers.delete('/:id', [checkJWT, checkRole(['ADMIN', 'BASIC'])], userController.deleteUser);
+
+export { routerUsers }
 

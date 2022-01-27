@@ -1,15 +1,16 @@
 import {Router} from 'express';
-import {artistController} from '../../controllers/artist-controller';
-import performingEventRouter from './perform';
-import {authenticate} from '../../middlewares/authenticateToken/authenticate-token';
+import {artistController} from '../../controllers/artist';
+import {routerArtistPerform} from './perform/index';
+import {checkJWT} from '../../middlewares/auth/checkJWT';
+import {checkRole} from '../../middlewares/auth/checkRole';
 
-const router = Router();
+const routerArtist = Router();
 
-router.use('/perform-event', performingEventRouter);
-router.get('/:id', authenticate.authRole('BASIC'), artistController.getArtist);
-router.get('/' , authenticate.authRole('BASIC'), artistController.getArtists);
-router.post('/', authenticate.authRole('ADMIN'), artistController.createArtist);
-router.put('/:id', authenticate.authRole('ADMIN'), artistController.updateArtist);
-router.delete('/:id', authenticate.authRole('ADMIN'), artistController.deleteArtist);
+routerArtist.use('/perform-event', routerArtistPerform);
+routerArtist.get('/:id', [checkJWT, checkRole(['ADMIN', 'BASIC'])], artistController.getArtist);
+routerArtist.get('/' , [checkJWT, checkRole(['ADMIN', 'BASIC'])], artistController.getArtists);
+routerArtist.post('/', [checkJWT, checkRole(['ADMIN'])], artistController.createArtist);
+routerArtist.put('/:id', [checkJWT, checkRole(['ADMIN'])], artistController.updateArtist);
+routerArtist.delete('/:id', [checkJWT, checkRole(['ADMIN'])], artistController.deleteArtist);
 
-export default router
+export {routerArtist}
