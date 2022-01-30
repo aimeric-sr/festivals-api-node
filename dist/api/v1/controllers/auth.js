@@ -11,22 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
 const auth_1 = require("../services/auth");
-const customError_1 = require("../responses/customError");
+const customError_1 = require("../types/errors/customError");
 class AuthController {
     login(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(req.body);
                 const { username, password } = req.body;
-                const user = yield auth_1.authService.login(username, password);
-                if (user.rowCount === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad username'));
-                }
-                if (user.isConnected === true) {
-                    res.status(200).json({ accessToken: user.accessToken, refreshToken: user.refreshToken });
+                const pool = req.pool;
+                const user = yield auth_1.authService.login(username, password, pool, next);
+                if (typeof user === 'undefined') {
+                    return;
                 }
                 else {
-                    return next(new customError_1.CustomError(400, 'General', 'wrong password'));
+                    res.status(200).json({ accessToken: user.accessToken, refreshToken: user.refreshToken });
                 }
             }
             catch (err) {
@@ -38,9 +35,10 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const refreshToken = req.body.refreshToken;
-                const accessToken = yield auth_1.authService.getAccessToken(refreshToken);
-                if (accessToken.rowCount === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'no refresh token find'));
+                const pool = req.pool;
+                const accessToken = yield auth_1.authService.getAccessToken(refreshToken, pool, next);
+                if (typeof accessToken === 'undefined') {
+                    return;
                 }
                 else {
                     res.status(200).json({ accessToken: accessToken.accessToken });
@@ -55,9 +53,10 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const refreshToken = req.body.refreshToken;
-                const deletedToken = yield auth_1.authService.logout(refreshToken);
-                if (deletedToken.rowCount === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'no refresh token find'));
+                const pool = req.pool;
+                const deletedToken = yield auth_1.authService.logout(refreshToken, pool, next);
+                if (typeof deletedToken === 'undefined') {
+                    return;
                 }
                 else {
                     res.status(204).json();

@@ -1,16 +1,12 @@
-import { Pool } from 'pg';
-import { DBConnectionHandler } from '../../../DBConnection/FestivalsDatabase/DBConnectionHandler';
-const pool = DBConnectionHandler.getInstance().getAdminPoolConnection;
+import { NextFunction } from "express";
+import { Pool } from "pg";
+import { SQLErrorHandler, instanceOfpgError } from "../middlewares/errors/SQLErrorHandler";
+import { CustomError } from "../types/errors/customError";
 
-export class UserRepository {
-    async getUser(id: number) {
-        return await pool.query('SELECT * FROM mobile_app.users WHERE id=$1;',[id])
-            .then(res => res)
-            .catch(err => err);
-    }
-
-    async getUserIncluding(id: number) {
-        return await pool.query(`
+class UserRepository {
+  async getUserIncluding(id: number, pool: Pool, next: NextFunction) {
+    try {
+      const text = `
             select row_to_json(u)
             from (select id,password,email,
                 (select array_to_json(array_agg(row_to_json(e)))
@@ -31,55 +27,24 @@ export class UserRepository {
                 ) as artists
             from users
             where id = $1
-            ) u;`,[id])
-            .then(res => res)
-            .catch(err => err);
+            ) u;`;
+      const values = [id];
+      return await pool.query(text, values);
+    } catch (err) {
+      if (instanceOfpgError(err)) {
+        switch (err.code) {
+          default:
+            return SQLErrorHandler(next, "unknown error");
+        }
+      } else {
+        return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+      }
     }
+  }
 
-    async getUsers() {
-        return await pool.query('SELECT * FROM mobile_app.users;')
-            .then(res => res)
-            .catch(err => console.log(err.message));
-    }
-
-    async getUsersIncludingArtists() {
-        return await pool.query(`
-            select array_to_json (array_agg(row_to_json(u)))
-            from (select id, password, email,(
-                select array_to_json(array_agg(row_to_json(a)))
-                from (select id, name, nationality, music_styles
-                    from follow_artist
-                    inner join artists
-                    on follow_artist.artist_id = artists.id
-                    where user_id=users.id
-                ) a
-            ) as artists
-            from users
-            ) u;`)
-            .then(res => res)
-            .catch(err => err);
-    }
-
-    async getUsersIncludingEvents() {
-        return await pool.query(`
-            select array_to_json(array_agg(row_to_json(u)))
-            from (select id, password, email,(
-                select array_to_json(array_agg(row_to_json(e)))
-                from (select id, name, location, started_date, finish_date
-                    from follow_event
-                    inner join events
-                    on follow_event.event_id = events.id
-                    where user_id = users.id
-                ) e
-            ) as events
-            from users
-            ) u;`)
-            .then(res => res)
-            .catch(err => err);
-    }
-
-    async getUsersIncluding() {
-        return await pool.query(`
+  async getUsersIncluding(pool: Pool, next: NextFunction) {
+    try {
+      const text = `
             select array_to_json(array_agg(row_to_json(u)))
             from (select id, password, email,
                  (select array_to_json(array_agg(row_to_json(e)))
@@ -99,31 +64,74 @@ export class UserRepository {
                     ) a
                 ) as artists
             from users
-        ) u;`)
-            .then(res => res)
-            .catch(err => err);
+        ) u;`;
+      return await pool.query(text);
+    } catch (err) {
+      if (instanceOfpgError(err)) {
+        switch (err.code) {
+          default:
+            return SQLErrorHandler(next, "unknown error");
+        }
+      } else {
+        return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+      }
     }
+  }
 
-    async createUser(poolAdmin: Pool, username: string, password: string, email: string) {
-
-        
-        return await poolAdmin.query('INSERT INTO mobile_app.users(username, password, email, role) VALUES ($1, $2, $3, $4) returning id;',
-            [username, password, email, '388e710f-5256-46e3-ab94-f6b0bfa2d87e'])
-            .then(res => res)
-            .catch(err => console.log(err));
+  async createUser(username: string, password: string, email: string, pool: Pool, next: NextFunction) {
+    try {
+      const text =
+        "INSERT INTO mobile_app.users(username, password, email, role) VALUES ($1, $2, $3, $4) returning id;";
+      const values = [username,password,email,"388e710f-5256-46e3-ab94-f6b0bfa2d87e"];
+      return await pool.query(text, values);
+    } catch (err) {
+      if (instanceOfpgError(err)) {
+        switch (err.code) {
+          case "23505":
+            return SQLErrorHandler(next, "username or email already exists");
+          default:
+            return SQLErrorHandler(next, "unknown error");
+        }
+      } else {
+        return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+      }
     }
+  }
 
-    async updateUser(id: number, username: string, password: string, email: string) {
-        return await pool.query('UPDATE mobile_app.users set username=$1, password=$2, email=$3 WHERE id=$4;',
-            [username, password, email, id])
-            .then(res => res)
-            .catch(err => console.log(err));
+  async updateUser(id: number, username: string, password: string, email: string, pool: Pool, next: NextFunction) {
+    try {
+      const text =
+        "UPDATE mobile_app.users set username=$1, password=$2, email=$3 WHERE id=$4;";
+      const values = [username, password, email, id];
+      return await pool.query(text, values);
+    } catch (err) {
+      if (instanceOfpgError(err)) {
+        switch (err.code) {
+          default:
+            return SQLErrorHandler(next, "unknown error");
+        }
+      } else {
+        return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+      }
     }
+  }
 
-    async deleteUser(id: number) {
-        return await pool.query('DELETE FROM mobile_app.users WHERE id=$1;',
-            [id])
-            .then(res => res)
-            .catch(err => console.log(err));
+  async deleteUser(id: number, pool: Pool, next: NextFunction) {
+    try {
+      const text = "DELETE FROM mobile_app.users WHERE id=$1;";
+      const values = [id];
+      return await pool.query(text, values);
+    } catch (err) {
+      if (instanceOfpgError(err)) {
+        switch (err.code) {
+          default:
+            return SQLErrorHandler(next, "unknown error");
+        }
+      } else {
+        return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+      }
     }
+  }
 }
+
+export const userRepository = new UserRepository();

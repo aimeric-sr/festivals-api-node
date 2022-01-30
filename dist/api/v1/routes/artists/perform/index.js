@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.routerArtistPerform = void 0;
 const express_1 = require("express");
 const performing_event_1 = require("../../../controllers/performing-event");
 const checkJWT_1 = require("../../../middlewares/auth/checkJWT");
 const checkRole_1 = require("../../../middlewares/auth/checkRole");
-const router = (0, express_1.Router)();
-router.post('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], performing_event_1.performingEventController.addPerformingEvent);
-router.delete('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], performing_event_1.performingEventController.delPerformingEvent);
-exports.default = router;
+const routerArtistPerform = (0, express_1.Router)();
+exports.routerArtistPerform = routerArtistPerform;
+routerArtistPerform.post('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], performing_event_1.performingEventController.addPerformingEvent);
+routerArtistPerform.delete('/', [checkJWT_1.checkJWT, (0, checkRole_1.checkRole)(['ADMIN', 'BASIC'])], performing_event_1.performingEventController.delPerformingEvent);

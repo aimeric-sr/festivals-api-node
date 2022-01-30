@@ -10,21 +10,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.followEventRepository = void 0;
-const DBConnectionHandler_1 = require("../../../DBConnection/FestivalsDatabase/DBConnectionHandler");
-const pool = DBConnectionHandler_1.DBConnectionHandler.getInstance().getAdminPoolConnection;
+const SQLErrorHandler_1 = require("../middlewares/errors/SQLErrorHandler");
+const customError_1 = require("../types/errors/customError");
 class FollowEventRepository {
-    addFollowEvent(user_id, event_id) {
+    addFollowEvent(user_id, event_id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('INSERT INTO mobile_app.follow_event(user_id, event_id) VALUES ($1, $2) returning user_id;', [user_id, event_id])
-                .then(res => res)
-                .catch(err => err);
+            try {
+                const text = 'INSERT INTO mobile_app.follow_event(user_id, event_id) VALUES ($1, $2) returning user_id;';
+                const values = [user_id, event_id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    delFollowEvent(user_id, event_id) {
+    delFollowEvent(user_id, event_id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('DELETE FROM mobile_app.follow_event WHERE user_id=$1 AND event_id=$2;', [user_id, event_id])
-                .then(res => res)
-                .catch(err => err);
+            try {
+                const text = 'DELETE FROM mobile_app.follow_event WHERE user_id=$1 AND event_id=$2;';
+                const values = [user_id, event_id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
 }

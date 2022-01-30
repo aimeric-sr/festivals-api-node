@@ -1,37 +1,93 @@
-import { DBConnectionHandler } from '../../../DBConnection/FestivalsDatabase/DBConnectionHandler';
-const pool = DBConnectionHandler.getInstance().getAdminPoolConnection;
+import { NextFunction } from 'express';
+import { Pool } from 'pg';
+import { instanceOfpgError, SQLErrorHandler } from '../middlewares/errors/SQLErrorHandler';
+import { CustomError } from '../types/errors/customError';
+
 class EventRepository {
-    async getEvent(id: number) {
-        return await pool.query('SELECT * FROM mobile_app.events WHERE id=$1;',[id])
-            .then(res => res)
-            .catch(err => err);
+    async getEvent(id: number, pool: Pool, next: NextFunction) {
+        try {
+            const text = 'SELECT * FROM mobile_app.events WHERE id=$1;';
+            const values = [id];
+            return await pool.query(text, values);
+          } catch (err) {
+            if (instanceOfpgError(err)) {
+              switch (err.code) {
+                case '22P02':
+                    return SQLErrorHandler(next, "UUID not found");
+                default:
+                  return SQLErrorHandler(next, "unknown error");
+              }
+            } else {
+              return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+            }
+          }
     }
 
-    async getEvents() {
-        return await pool.query('SELECT * FROM mobile_app.events;')
-            .then(res => res)
-            .catch(err => console.log(err.message));
+    async getEvents(pool: Pool, next: NextFunction) {
+        try {
+            const text = 'SELECT * FROM mobile_app.events;';
+            return await pool.query(text);
+          } catch (err) {
+            if (instanceOfpgError(err)) {
+              switch (err.code) {
+                default:
+                  return SQLErrorHandler(next, "unknown error");
+              }
+            } else {
+              return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+            }
+          }
     }
 
-    async createEvent(name: string, location: string, started_date: string, finish_date: string) {
-        return await pool.query('INSERT INTO mobile_app.events(name, location, started_date, finish_date) VALUES ($1, $2, $3, $4) returning id;',
-            [name, location, started_date, finish_date])
-            .then(res => res)
-            .catch(err => err);
+    async createEvent(name: string, location: string, started_date: string, finish_date: string, pool: Pool, next: NextFunction) {
+        try {
+            const text = 'INSERT INTO mobile_app.events(name, location, started_date, finish_date) VALUES ($1, $2, $3, $4) returning id;';
+            const values = [name, location, started_date, finish_date];
+            return await pool.query(text, values);
+          } catch (err) {
+            if (instanceOfpgError(err)) {
+              switch (err.code) {
+                default:
+                  return SQLErrorHandler(next, "unknown error");
+              }
+            } else {
+              return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+            }
+          }
     }
 
-    async updateEvent(id: number, name: string, location: string, started_date: string, finish_date: string) {
-        return await pool.query('UPDATE mobile_app.events set name=$1, location=$2, started_date=$3, finish_date=$4 WHERE id=$5;',
-            [name, location, started_date, finish_date, id])
-            .then(res => res)
-            .catch(err => console.log(err));
+    async updateEvent(id: number, name: string, location: string, started_date: string, finish_date: string, pool: Pool, next: NextFunction) {
+        try {
+            const text = 'UPDATE mobile_app.events set name=$1, location=$2, started_date=$3, finish_date=$4 WHERE id=$5;';
+            const values = [name, location, started_date, finish_date, id];
+            return await pool.query(text, values);
+          } catch (err) {
+            if (instanceOfpgError(err)) {
+              switch (err.code) {
+                default:
+                  return SQLErrorHandler(next, "unknown error");
+              }
+            } else {
+              return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+            }
+          }
     }
 
-    async deleteEvent(id: number) {
-        return await pool.query('DELETE FROM mobile_app.events WHERE id=$1;',
-            [id])
-            .then(res => res)
-            .catch(err => console.log(err));
+    async deleteEvent(id: number, pool: Pool, next: NextFunction) {
+        try {
+            const text = 'DELETE FROM mobile_app.events WHERE id=$1;';
+            const values = [id];
+            return await pool.query(text, values);
+          } catch (err) {
+            if (instanceOfpgError(err)) {
+              switch (err.code) {
+                default:
+                  return SQLErrorHandler(next, "unknown error");
+              }
+            } else {
+              return next(new CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+            }
+          }
     }
 }
 

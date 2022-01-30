@@ -1,48 +1,55 @@
-import { UserRepository } from '../repositories/user';
+import { NextFunction } from 'express';
+import { userRepository } from '../repositories/user';
 import bcrypt from 'bcryptjs';
 import { Pool } from 'pg';
+import { CustomError } from '../types/errors/customError';
 
 class UserService {
-    private userRepository = new UserRepository();
-
-    async getUser(id: number) {
-        return this.userRepository.getUser(id);
+    async getUserIncluding(id: number, pool: Pool, next: NextFunction) {
+        try {
+            return userRepository.getUserIncluding(id, pool, next);
+        }
+        catch(err){
+            return next(new CustomError(500, 'General', 'internal server error from the servie layout'));
+        }
     }
 
-    async getUserIncluding(id: number) {
-        return this.userRepository.getUserIncluding(id);
+    async getUsersIncluding(pool: Pool, next: NextFunction) {
+        try {
+            return userRepository.getUsersIncluding(pool, next);
+        }
+        catch(err){
+            return next(new CustomError(500, 'General', 'internal server error from the servie layout'));
+        }
     }
 
-    async getUsers() {
-        return this.userRepository.getUsers();
+    async createUser(username: string, password: string, email: string, pool: Pool, next: NextFunction) {
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            return userRepository.createUser(username, hashedPassword, email, pool, next);
+        }
+        catch(err){
+            return next(new CustomError(500, 'General', 'internal server error from the servie layout'));
+        }
     }
 
-    async getUsersIncludingArtists() {
-        return this.userRepository.getUsersIncludingArtists();
+    async updateUser(id: number, username: string, password: string, email: string, pool: Pool, next: NextFunction) {
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            return userRepository.updateUser(id, username, hashedPassword, email, pool, next);
+        }
+        catch(err){
+            return next(new CustomError(500, 'General', 'internal server error from the servie layout'));
+        }
     }
 
-    async getUsersIncludingEvents() {
-        return this.userRepository.getUsersIncludingEvents();
-    }
-
-    async getUsersIncluding() {
-        return this.userRepository.getUsersIncluding();
-    }
-
-    async createUser(pool: Pool, username: string, password: string, email: string) {
-
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
-        return this.userRepository.createUser(pool, username, hashedPassword, email);
-    }
-
-    async updateUser(id: number, username: string, password: string, email: string) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        return this.userRepository.updateUser(id, username, hashedPassword, email);
-    }
-
-    async deleteUser(id: number) {
-        return this.userRepository.deleteUser(id);
+    async deleteUser(id: number, pool: Pool, next: NextFunction) {
+        try {
+            return userRepository.deleteUser(id, pool, next);
+        }
+        catch(err){
+            return next(new CustomError(500, 'General', 'internal server error from the servie layout'));
+        }
     }
 }
 

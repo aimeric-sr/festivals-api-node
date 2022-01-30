@@ -68,10 +68,17 @@ GRANT SELECT ON ALL TABLES IN SCHEMA mobile_app TO api_festivals_user_basic;
 GRANT INSERT ON TABLE mobile_app.follow_artist TO api_festivals_user_basic;
 GRANT INSERT ON TABLE mobile_app.follow_event TO api_festivals_user_basic;
 
+GRANT SELECT ON TABLE mobile_app.roles TO api_festivals_user_no_auth;
+
 GRANT INSERT ON TABLE mobile_app.users TO api_festivals_user_no_auth;
 GRANT SELECT ON TABLE mobile_app.users TO api_festivals_user_no_auth;
+
 GRANT INSERT ON TABLE mobile_app.refresh_token TO api_festivals_user_no_auth;
+GRANT SELECT ON TABLE mobile_app.refresh_token TO api_festivals_user_no_auth;
 GRANT DELETE ON TABLE mobile_app.refresh_token TO api_festivals_user_no_auth;
+
+
+
 
 --create function
 CREATE OR REPLACE FUNCTION function_set_timestamp_update()

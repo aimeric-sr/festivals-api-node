@@ -1,19 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import { Role } from '../../types/auth/JWTPayload';
-import { CustomError } from '../../responses/customError';
+import { CustomError } from '../../types/errors/customError';
 import { DBConnectionHandler } from '../../../../DBConnection/FestivalsDatabase/DBConnectionHandler';
 
 export const checkRole = (roles: Role[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const { role } = req.jwtPayload;
-
+    var role: Role;
+    if (req.jwtPayload){
+      role = req.jwtPayload.role;
+    }else {
+      role = 'NOAUTH'
+    }
+    
     if (roles.indexOf(role) === -1) {
-      const errors = [
-        'Unauthorized - Insufficient user rights',
-        `Current role: ${role}. Required role: ${roles.toString()}`,
-      ];
-
-      const customError = new CustomError(401, 'Unauthorized', 'Unauthorized - Insufficient user rights', errors);
+      const customError = new CustomError(
+        401, 
+        'Unauthorized', 
+        `Current role: ${role}. Required role: ${roles.toString()}Unauthorized - Insufficient user rights`);
       return next(customError);
     }
 

@@ -11,30 +11,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.artistService = void 0;
 const artist_1 = require("../repositories/artist");
+const customError_1 = require("../types/errors/customError");
 class ArtistService {
-    getArtist(id) {
+    getArtist(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return artist_1.artistRepository.getArtist(id);
+            try {
+                return artist_1.artistRepository.getArtist(id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    getArtists() {
+    getArtists(pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return artist_1.artistRepository.getArtists();
+            try {
+                return artist_1.artistRepository.getArtists(pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    createArtist(name, nationality, music_styles) {
+    createArtist(name, nationality, music_styles, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return artist_1.artistRepository.createArtist(name, nationality, music_styles);
+            try {
+                return artist_1.artistRepository.createArtist(name, nationality, music_styles, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    updateArtist(id, name, nationality, music_styles) {
+    updateArtist(id, name, nationality, music_styles, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return artist_1.artistRepository.updateArtist(id, name, nationality, music_styles);
+            try {
+                return artist_1.artistRepository.updateArtist(id, name, nationality, music_styles, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    deleteArtist(id) {
+    deleteArtist(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return artist_1.artistRepository.deleteArtist(id);
+            try {
+                return artist_1.artistRepository.deleteArtist(id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
 }

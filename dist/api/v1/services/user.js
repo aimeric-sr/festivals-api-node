@@ -15,55 +15,58 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
 const user_1 = require("../repositories/user");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const customError_1 = require("../types/errors/customError");
 class UserService {
-    constructor() {
-        this.userRepository = new user_1.UserRepository();
-    }
-    getUser(id) {
+    getUserIncluding(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUser(id);
+            try {
+                return user_1.userRepository.getUserIncluding(id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    getUserIncluding(id) {
+    getUsersIncluding(pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUserIncluding(id);
+            try {
+                return user_1.userRepository.getUsersIncluding(pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    getUsers() {
+    createUser(username, password, email, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUsers();
+            try {
+                const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
+                return user_1.userRepository.createUser(username, hashedPassword, email, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    getUsersIncludingArtists() {
+    updateUser(id, username, password, email, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUsersIncludingArtists();
+            try {
+                const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
+                return user_1.userRepository.updateUser(id, username, hashedPassword, email, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    getUsersIncludingEvents() {
+    deleteUser(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUsersIncludingEvents();
-        });
-    }
-    getUsersIncluding() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUsersIncluding();
-        });
-    }
-    createUser(pool, username, password, email) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
-            return this.userRepository.createUser(pool, username, hashedPassword, email);
-        });
-    }
-    updateUser(id, username, password, email) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
-            return this.userRepository.updateUser(id, username, hashedPassword, email);
-        });
-    }
-    deleteUser(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.deleteUser(id);
+            try {
+                return user_1.userRepository.deleteUser(id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
 }

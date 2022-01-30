@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const customError_1 = require("../../responses/customError");
+const customError_1 = require("../../types/errors/customError");
 require("dotenv/config");
 const checkJWT = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -21,7 +21,7 @@ const checkJWT = (req, res, next) => {
         req.jwtPayload = jwtPayload;
     }
     catch (err) {
-        return next(new customError_1.CustomError(401, 'Raw', 'JWT error', null, err));
+        return next(new customError_1.CustomError(401, 'Raw', 'JWT error'));
     }
 };
 exports.checkJWT = checkJWT;

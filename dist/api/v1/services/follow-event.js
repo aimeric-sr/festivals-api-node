@@ -11,15 +11,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.followEventService = void 0;
 const follow_event_1 = require("../repositories/follow-event");
+const customError_1 = require("../types/errors/customError");
 class FollowEventService {
-    addFollowEvent(user_id, event_id) {
+    addFollowEvent(user_id, event_id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return follow_event_1.followEventRepository.addFollowEvent(user_id, event_id);
+            try {
+                return follow_event_1.followEventRepository.addFollowEvent(user_id, event_id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    delFollowEvent(user_id, event_id) {
+    delFollowEvent(user_id, event_id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return follow_event_1.followEventRepository.delFollowEvent(user_id, event_id);
+            try {
+                return follow_event_1.followEventRepository.delFollowEvent(user_id, event_id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
 }

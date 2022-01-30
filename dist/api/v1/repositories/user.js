@@ -9,20 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserRepository = void 0;
-const DBConnectionHandler_1 = require("../../../DBConnection/FestivalsDatabase/DBConnectionHandler");
-const pool = DBConnectionHandler_1.DBConnectionHandler.getInstance().getAdminPoolConnection;
+exports.userRepository = void 0;
+const SQLErrorHandler_1 = require("../middlewares/errors/SQLErrorHandler");
+const customError_1 = require("../types/errors/customError");
 class UserRepository {
-    getUser(id) {
+    getUserIncluding(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT * FROM mobile_app.users WHERE id=$1;', [id])
-                .then(res => res)
-                .catch(err => err);
-        });
-    }
-    getUserIncluding(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query(`
+            try {
+                const text = `
             select row_to_json(u)
             from (select id,password,email,
                 (select array_to_json(array_agg(row_to_json(e)))
@@ -43,59 +37,27 @@ class UserRepository {
                 ) as artists
             from users
             where id = $1
-            ) u;`, [id])
-                .then(res => res)
-                .catch(err => err);
+            ) u;`;
+                const values = [id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    getUsers() {
+    getUsersIncluding(pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT * FROM mobile_app.users;')
-                .then(res => res)
-                .catch(err => console.log(err.message));
-        });
-    }
-    getUsersIncludingArtists() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query(`
-            select array_to_json (array_agg(row_to_json(u)))
-            from (select id, password, email,(
-                select array_to_json(array_agg(row_to_json(a)))
-                from (select id, name, nationality, music_styles
-                    from follow_artist
-                    inner join artists
-                    on follow_artist.artist_id = artists.id
-                    where user_id=users.id
-                ) a
-            ) as artists
-            from users
-            ) u;`)
-                .then(res => res)
-                .catch(err => err);
-        });
-    }
-    getUsersIncludingEvents() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query(`
-            select array_to_json(array_agg(row_to_json(u)))
-            from (select id, password, email,(
-                select array_to_json(array_agg(row_to_json(e)))
-                from (select id, name, location, started_date, finish_date
-                    from follow_event
-                    inner join events
-                    on follow_event.event_id = events.id
-                    where user_id = users.id
-                ) e
-            ) as events
-            from users
-            ) u;`)
-                .then(res => res)
-                .catch(err => err);
-        });
-    }
-    getUsersIncluding() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query(`
+            try {
+                const text = `
             select array_to_json(array_agg(row_to_json(u)))
             from (select id, password, email,
                  (select array_to_json(array_agg(row_to_json(e)))
@@ -115,31 +77,83 @@ class UserRepository {
                     ) a
                 ) as artists
             from users
-        ) u;`)
-                .then(res => res)
-                .catch(err => err);
+        ) u;`;
+                return yield pool.query(text);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    createUser(poolAdmin, username, password, email) {
+    createUser(username, password, email, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield poolAdmin.query('INSERT INTO mobile_app.users(username, password, email, role) VALUES ($1, $2, $3, $4) returning id;', [username, password, email, '388e710f-5256-46e3-ab94-f6b0bfa2d87e'])
-                .then(res => res)
-                .catch(err => console.log(err));
+            try {
+                const text = "INSERT INTO mobile_app.users(username, password, email, role) VALUES ($1, $2, $3, $4) returning id;";
+                const values = [username, password, email, "388e710f-5256-46e3-ab94-f6b0bfa2d87e"];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        case "23505":
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "username or email already exists");
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    updateUser(id, username, password, email) {
+    updateUser(id, username, password, email, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('UPDATE mobile_app.users set username=$1, password=$2, email=$3 WHERE id=$4;', [username, password, email, id])
-                .then(res => res)
-                .catch(err => console.log(err));
+            try {
+                const text = "UPDATE mobile_app.users set username=$1, password=$2, email=$3 WHERE id=$4;";
+                const values = [username, password, email, id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    deleteUser(id) {
+    deleteUser(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('DELETE FROM mobile_app.users WHERE id=$1;', [id])
-                .then(res => res)
-                .catch(err => console.log(err));
+            try {
+                const text = "DELETE FROM mobile_app.users WHERE id=$1;";
+                const values = [id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
 }
-exports.UserRepository = UserRepository;
+exports.userRepository = new UserRepository();

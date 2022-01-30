@@ -1,5 +1,5 @@
+import { followEventController } from './../../../../controllers/follow-event';
 import {Router} from 'express';
-import {followEventController} from '../../../../controllers/follow-event';
 import {checkJWT} from '../../../../middlewares/auth/checkJWT';
 import {checkRole} from '../../../../middlewares/auth/checkRole';
 

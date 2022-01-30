@@ -11,15 +11,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.performingEventService = void 0;
 const performing_event_1 = require("../repositories/performing-event");
+const customError_1 = require("../types/errors/customError");
 class PerformingEventService {
-    addPerformingEvent(artist_id, event_id) {
+    addPerformingEvent(artist_id, event_id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return performing_event_1.performingEventRepository.addPerformingEvent(artist_id, event_id);
+            try {
+                return performing_event_1.performingEventRepository.addPerformingEvent(artist_id, event_id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    delPerformingEvent(artist_id, event_id) {
+    delPerformingEvent(artist_id, event_id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return performing_event_1.performingEventRepository.delPerformingEvent(artist_id, event_id);
+            try {
+                return performing_event_1.performingEventRepository.delPerformingEvent(artist_id, event_id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
 }

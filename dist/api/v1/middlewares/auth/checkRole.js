@@ -10,17 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkRole = void 0;
-const customError_1 = require("../../responses/customError");
+const customError_1 = require("../../types/errors/customError");
 const DBConnectionHandler_1 = require("../../../../DBConnection/FestivalsDatabase/DBConnectionHandler");
 const checkRole = (roles) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        const { role } = req.jwtPayload;
+        var role;
+        if (req.jwtPayload) {
+            role = req.jwtPayload.role;
+        }
+        else {
+            role = 'NOAUTH';
+        }
         if (roles.indexOf(role) === -1) {
-            const errors = [
-                'Unauthorized - Insufficient user rights',
-                `Current role: ${role}. Required role: ${roles.toString()}`,
-            ];
-            const customError = new customError_1.CustomError(401, 'Unauthorized', 'Unauthorized - Insufficient user rights', errors);
+            const customError = new customError_1.CustomError(401, 'Unauthorized', `Current role: ${role}. Required role: ${roles.toString()}Unauthorized - Insufficient user rights`);
             return next(customError);
         }
         switch (role) {

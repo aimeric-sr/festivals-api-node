@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.routerFollowEvent = void 0;
+const follow_event_1 = require("./../../../../controllers/follow-event");
 const express_1 = require("express");
-const follow_event_1 = require("../../../../controllers/follow-event");
 const checkJWT_1 = require("../../../../middlewares/auth/checkJWT");
 const checkRole_1 = require("../../../../middlewares/auth/checkRole");
 const routerFollowEvent = (0, express_1.Router)();

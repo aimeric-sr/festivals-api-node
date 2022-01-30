@@ -13,7 +13,7 @@ routerV1.use('/events', routerEvents);
 routerV1.use('/artists', routerArtist);
 routerV1.use('/auth', routerAuth);
 
-routerV1.use(routerRoot);
+routerV1.use('/',routerRoot);
 routerV1.use(router404);
 
 export { routerV1 }

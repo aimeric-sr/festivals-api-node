@@ -1,21 +1,19 @@
 import {Request, Response, NextFunction} from "express"
 import {authService} from "../services/auth";
-import { CustomError } from '../responses/customError';
+import { CustomError } from '../types/errors/customError';
 
 
 class AuthController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log(req.body)
             const {username, password} = req.body;
-            const user: any = await authService.login(username, password);
-            if (user.rowCount === 0) {
-                return next(new CustomError(404, 'General', 'bad username'));
-            }
-            if (user.isConnected === true) {
+            const pool = req.pool;
+            const user: any = await authService.login(username, password, pool, next);
+
+            if (typeof user === 'undefined') {
+                return;
+            }else {
                 res.status(200).json({accessToken: user.accessToken, refreshToken: user.refreshToken});
-            } else {
-                return next(new CustomError(400, 'General', 'wrong password'));
             }
         } catch (err) {
             return next(new CustomError(500, 'General', 'server error'));
@@ -25,9 +23,10 @@ class AuthController {
     async getToken(req: Request, res: Response, next: NextFunction) {
         try {
             const refreshToken = req.body.refreshToken;
-            const accessToken = await authService.getAccessToken(refreshToken);
-            if (accessToken.rowCount === 0) {
-                return next(new CustomError(404, 'General', 'no refresh token find'));
+            const pool = req.pool;
+            const accessToken = await authService.getAccessToken(refreshToken, pool, next);
+            if (typeof accessToken === 'undefined') {
+                return;
             } else {
                 res.status(200).json({accessToken: accessToken.accessToken});
             }
@@ -39,9 +38,10 @@ class AuthController {
     async logout(req: Request, res: Response, next: NextFunction) {
         try {
             const refreshToken = req.body.refreshToken;
-            const deletedToken: any = await authService.logout(refreshToken);
-            if (deletedToken.rowCount === 0) {
-                return next(new CustomError(404, 'General', 'no refresh token find'));
+            const pool = req.pool;
+            const deletedToken: any = await authService.logout(refreshToken, pool, next);
+            if (typeof deletedToken === 'undefined') {
+                return;
             } else {
                 res.status(204).json();
             }

@@ -11,36 +11,43 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.artistController = void 0;
 const artist_1 = require("../services/artist");
-const customError_1 = require("../responses/customError");
+const customError_1 = require("../types/errors/customError");
+require("dotenv/config");
 class ArtistController {
-    getArtist(req, res, next) {
+    getArtistIncluding(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const user = yield artist_1.artistService.getArtist(parseInt(id));
-                if (user.code === '22P02') {
-                    return next(new customError_1.CustomError(400, 'General', 'wrong format identifier for artist UUID'));
+                const pool = req.pool;
+                const user = yield artist_1.artistService.getArtist(parseInt(id), pool, next);
+                if (typeof user === 'undefined') {
+                    return;
                 }
-                if (user.rows.length === 0) {
-                    return next(new customError_1.CustomError(500, 'General', 'server error'));
+                else if (user.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'No event found'));
                 }
-                else
+                else {
                     res.status(200).json(user.rows[0]);
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));
             }
         });
     }
-    getArtists(req, res, next) {
+    getArtistsIncluding(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const users = yield artist_1.artistService.getArtists();
-                if (users.rows.length === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'no artist found'));
+                const pool = req.pool;
+                const artists = yield artist_1.artistService.getArtists(pool, next);
+                if (typeof artists === 'undefined') {
+                    return;
+                }
+                else if (artists.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'No artist found'));
                 }
                 else {
-                    res.status(200).json(users.rows);
+                    res.status(200).json(artists.rows);
                 }
             }
             catch (err) {
@@ -51,11 +58,16 @@ class ArtistController {
     createArtist(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(req.body);
                 const { name, nationality, music_styles } = req.body;
-                const rowCreated = yield artist_1.artistService.createArtist(name, nationality, music_styles);
-                res.location('http://' + process.env.PGHOST + ':' + process.env.SERVERPORT + req.originalUrl + '/' + rowCreated.rows[0].id);
-                res.status(201).json();
+                const pool = req.pool;
+                const rowCreated = yield artist_1.artistService.createArtist(name, nationality, music_styles, pool, next);
+                if (typeof rowCreated === 'undefined') {
+                    return;
+                }
+                else {
+                    res.location('http://' + process.env.PGHOST + ':' + process.env.SERVERPORT + req.originalUrl + '/' + rowCreated.rows[0].id);
+                    res.status(201).json();
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));
@@ -67,12 +79,17 @@ class ArtistController {
             try {
                 const id = req.params.id;
                 const { name, nationality, music_styles } = req.body;
-                const rowUpdated = yield artist_1.artistService.updateArtist(parseInt(id), name, nationality, music_styles);
-                if (rowUpdated.rowCount === 0) {
-                    return next(new customError_1.CustomError(500, 'General', 'server error'));
+                const pool = req.pool;
+                const rowUpdated = yield artist_1.artistService.updateArtist(parseInt(id), name, nationality, music_styles, pool, next);
+                if (typeof rowUpdated === 'undefined') {
+                    return;
                 }
-                else
+                else if (rowUpdated.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'no artist found'));
+                }
+                else {
                     res.status(200).json();
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));
@@ -83,12 +100,17 @@ class ArtistController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const rowDeleted = yield artist_1.artistService.deleteArtist(parseInt(id));
-                if (rowDeleted.rowCount === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'no artist found with this id, can\'t delete it'));
+                const pool = req.pool;
+                const rowDeleted = yield artist_1.artistService.deleteArtist(parseInt(id), pool, next);
+                if (typeof rowDeleted === 'undefined') {
+                    return;
                 }
-                else
+                else if (rowDeleted.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'no artist found'));
+                }
+                else {
                     res.status(204).json();
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));

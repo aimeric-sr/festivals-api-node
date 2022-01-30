@@ -11,30 +11,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.eventService = void 0;
 const event_1 = require("../repositories/event");
+const customError_1 = require("../types/errors/customError");
 class EventService {
-    getEvent(id) {
+    getEvent(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return event_1.eventRepository.getEvent(id);
+            try {
+                return event_1.eventRepository.getEvent(id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    getEvents() {
+    getEvents(pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return event_1.eventRepository.getEvents();
+            try {
+                return event_1.eventRepository.getEvents(pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    createEvent(name, location, started_date, finish_date) {
+    createEvent(name, location, started_date, finish_date, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return event_1.eventRepository.createEvent(name, location, started_date, finish_date);
+            try {
+                return event_1.eventRepository.createEvent(name, location, started_date, finish_date, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    updateEvent(id, name, location, started_date, finish_date) {
+    updateEvent(id, name, location, started_date, finish_date, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return event_1.eventRepository.updateEvent(id, name, location, started_date, finish_date);
+            try {
+                return event_1.eventRepository.updateEvent(id, name, location, started_date, finish_date, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
-    deleteEvent(id) {
+    deleteEvent(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return event_1.eventRepository.deleteEvent(id);
+            try {
+                return event_1.eventRepository.deleteEvent(id, pool, next);
+            }
+            catch (err) {
+                return next(new customError_1.CustomError(500, 'General', 'internal server error from the servie layout'));
+            }
         });
     }
 }

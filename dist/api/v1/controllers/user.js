@@ -10,105 +10,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
+const customError_1 = require("./../types/errors/customError");
 const user_1 = require("../services/user");
-const customError_1 = require("../responses/customError");
-const dotenv = require('dotenv');
-dotenv.config();
+require("dotenv/config");
 class UserController {
-    getUser(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const id = req.params.id;
-                const user = yield user_1.userService.getUser(parseInt(id));
-                if (user.code === '22P02') {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
-                }
-                if (user.rows.length === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
-                }
-                else
-                    res.status(200).json(user.rows[0]);
-            }
-            catch (err) {
-                return next(new customError_1.CustomError(500, 'General', 'server error'));
-            }
-        });
-    }
     getUserIncluding(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const user = yield user_1.userService.getUserIncluding(parseInt(id));
-                if (user.code === '22P02') {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
+                const pool = req.pool;
+                const userRows = yield user_1.userService.getUserIncluding(parseInt(id), pool, next);
+                if (typeof userRows === 'undefined') {
+                    return;
                 }
-                if (user.rows.length === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
+                else if (userRows.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'No user found'));
                 }
-                else
-                    res.status(200).json(user.rows[0].row_to_json);
+                else {
+                    res.status(200).json(userRows.rows);
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));
-            }
-        });
-    }
-    getUsers(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const users = yield user_1.userService.getUsers();
-                if (users) {
-                    if (users.rowCount === 0) {
-                        return next(new customError_1.CustomError(404, 'General', 'bad request'));
-                    }
-                    else {
-                        res.status(200).json(users.rows);
-                    }
-                }
-            }
-            catch (err) {
-                return next(new customError_1.CustomError(500, 'General', 'bad request'));
-            }
-        });
-    }
-    getUsersIncludingArtists(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const users = yield user_1.userService.getUsersIncludingArtists();
-                if (users.rows.length === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
-                }
-                else {
-                    res.status(200).json(users.rows[0].array_to_json);
-                }
-            }
-            catch (err) {
-                return next(new customError_1.CustomError(500, 'General', 'bad request'));
-            }
-        });
-    }
-    getUsersIncludingEvents(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const users = yield user_1.userService.getUsersIncludingEvents();
-                if (users.rows.length === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
-                }
-                else {
-                    res.status(200).json(users.rows[0].array_to_json);
-                }
-            }
-            catch (err) {
-                return next(new customError_1.CustomError(404, 'General', 'bad request'));
             }
         });
     }
     getUsersIncluding(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const users = yield user_1.userService.getUsersIncluding();
-                if (users.rows.length === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
+                const pool = req.pool;
+                const users = yield user_1.userService.getUsersIncluding(pool, next);
+                if (typeof users === 'undefined') {
+                    return;
+                }
+                else if (users.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'No users found'));
                 }
                 else {
                     res.status(200).json(users.rows[0].array_to_json);
@@ -123,14 +59,18 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { username, password, email } = req.body;
-                console.log(req.pool);
-                const rowCreated = yield user_1.userService.createUser(req.pool, username, password, email);
-                console.log(rowCreated);
-                res.status(201).json();
+                const pool = req.pool;
+                const userCreated = yield user_1.userService.createUser(username, password, email, pool, next);
+                if (typeof userCreated === 'undefined') {
+                    return;
+                }
+                else {
+                    res.location('http://' + process.env.PGHOST + ':' + process.env.PORT + req.originalUrl + '/' + userCreated.rows[0].id);
+                    res.status(201).json();
+                }
             }
             catch (err) {
-                console.log(err);
-                return next(new customError_1.CustomError(500, 'General', 'server error'));
+                return next(new customError_1.CustomError(500, 'General', 'internal server error'));
             }
         });
     }
@@ -139,9 +79,13 @@ class UserController {
             try {
                 const id = req.params.id;
                 const { username, password, email } = req.body;
-                const rowUpdated = yield user_1.userService.updateUser(parseInt(id), username, password, email);
-                if (rowUpdated && rowUpdated.rowCount === 0) {
-                    return next(new customError_1.CustomError(404, 'General', 'bad request'));
+                const pool = req.pool;
+                const rowUpdated = yield user_1.userService.updateUser(parseInt(id), username, password, email, pool, next);
+                if (typeof rowUpdated === 'undefined') {
+                    return;
+                }
+                else if (rowUpdated.rowCount === 0) {
+                    return next(new customError_1.CustomError(404, 'General', 'wrong uuid'));
                 }
                 else {
                     res.status(200).json();
@@ -156,8 +100,12 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const rowDeleted = yield user_1.userService.deleteUser(parseInt(id));
-                if (rowDeleted && rowDeleted.rowCount === 0) {
+                const pool = req.pool;
+                const rowDeleted = yield user_1.userService.deleteUser(parseInt(id), pool, next);
+                if (typeof rowDeleted === 'undefined') {
+                    return;
+                }
+                else if (rowDeleted.rowCount === 0) {
                     return next(new customError_1.CustomError(404, 'General', 'bad request'));
                 }
                 else {

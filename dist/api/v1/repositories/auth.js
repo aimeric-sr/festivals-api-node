@@ -10,42 +10,110 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRepository = void 0;
-const DBConnectionHandler_1 = require("../../../DBConnection/FestivalsDatabase/DBConnectionHandler");
-const pool = DBConnectionHandler_1.DBConnectionHandler.getInstance().getAdminPoolConnection;
+const SQLErrorHandler_1 = require("../middlewares/errors/SQLErrorHandler");
+const customError_1 = require("../types/errors/customError");
 class AuthRepository {
-    getUserByUsername(username) {
+    getUserByUsername(username, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT * FROM mobile_app.users LEFT JOIN mobile_app.roles ON users.role=roles.id WHERE username=$1;', [username])
-                .then(res => res)
-                .catch(err => console.log(err.message));
+            try {
+                const text = 'SELECT * FROM mobile_app.users LEFT JOIN mobile_app.roles ON users.role=roles.id WHERE username=$1;';
+                const values = [username];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    console.log(err);
+                    switch (err.code) {
+                        case '42501':
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "insufficient right");
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    getUuidRole(roleName) {
+    getUuidRole(roleName, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT id FROM mobile_app.roles WHERE name=$1;', [roleName])
-                .then(res => res)
-                .catch(err => console.log(err.message));
+            try {
+                const text = 'SELECT id FROM mobile_app.roles WHERE name=$1;';
+                const values = [roleName];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    createToken(refreshToken) {
+    createToken(refreshToken, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('INSERT INTO mobile_app.refresh_token(token_value) VALUES ($1);', [refreshToken])
-                .then(res => res)
-                .catch(err => console.log(err.message));
+            try {
+                const text = 'INSERT INTO mobile_app.refresh_token(token_value) VALUES ($1);';
+                const values = [refreshToken];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    searchRefreshToken(refreshToken) {
+    searchRefreshToken(refreshToken, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT * FROM mobile_app.refresh_token WHERE token_value=$1;', [refreshToken])
-                .then(res => res)
-                .catch(err => console.log(err.message));
+            try {
+                const text = 'SELECT * FROM mobile_app.refresh_token WHERE token_value=$1;';
+                const values = [refreshToken];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    deleteRefreshToken(refreshTokenDel) {
+    deleteRefreshToken(refreshTokenDel, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('DELETE FROM mobile_app.refresh_token WHERE token_value=$1 returning id;', [refreshTokenDel])
-                .then(res => res)
-                .catch(err => console.log(err.message));
+            try {
+                const text = 'DELETE FROM mobile_app.refresh_token WHERE token_value=$1 returning id;';
+                const values = [refreshTokenDel];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
 }

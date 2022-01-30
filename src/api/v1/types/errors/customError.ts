@@ -1,28 +1,19 @@
-import { ErrorType, ErrorValidation, ErrorResponse } from '../types/errors/ErrorType';
+import { ErrorType, ErrorValidation, ErrorResponse } from './ErrorType';
 
 export class CustomError extends Error {
   private httpStatusCode: number;
   private errorType: ErrorType;
-  private errors: string[] | null;
-  private errorRaw: any;
   private errorsValidation: ErrorValidation[] | null;
 
   constructor(
     httpStatusCode: number,
     errorType: ErrorType,
-    message: string,
-    errors: string[] | null = null,
-    errorRaw: any = null,
+    errorMessage: string,
     errorsValidation: ErrorValidation[] | null = null,
   ) {
-    super(message);
-
-    this.name = this.constructor.name;
-
+    super(errorMessage);
     this.httpStatusCode = httpStatusCode;
     this.errorType = errorType;
-    this.errors = errors;
-    this.errorRaw = errorRaw;
     this.errorsValidation = errorsValidation;
   }
 
@@ -34,10 +25,7 @@ export class CustomError extends Error {
     return {
       errorType: this.errorType,
       errorMessage: this.message,
-      errors: this.errors,
-      errorRaw: this.errorRaw,
-      errorsValidation: this.errorsValidation,
-      stack: this.stack,
+      errorsValidation: this.errorsValidation
     };
   }
 }

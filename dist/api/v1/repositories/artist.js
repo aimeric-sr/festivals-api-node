@@ -10,42 +10,108 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.artistRepository = void 0;
-const DBConnectionHandler_1 = require("../../../DBConnection/FestivalsDatabase/DBConnectionHandler");
-const pool = DBConnectionHandler_1.DBConnectionHandler.getInstance().getAdminPoolConnection;
+const SQLErrorHandler_1 = require("../middlewares/errors/SQLErrorHandler");
+const customError_1 = require("../types/errors/customError");
 class ArtistRepository {
-    getArtist(id) {
+    getArtist(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT * FROM mobile_app.artists WHERE id=$1;', [id])
-                .then(res => res)
-                .catch(err => err);
+            try {
+                const text = 'SELECT * FROM mobile_app.artists WHERE id=$1;';
+                const values = [id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        case '22P02':
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "UUID not found");
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    getArtists() {
+    getArtists(pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('SELECT * FROM mobile_app.artists;')
-                .then(res => res)
-                .catch(err => console.log(err.message));
+            try {
+                const text = 'SELECT * FROM mobile_app.artists;';
+                return yield pool.query(text);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    createArtist(name, nationality, music_styles) {
+    createArtist(name, nationality, music_styles, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('INSERT INTO mobile_app.artists(name, nationality, music_styles) VALUES ($1, $2, $3) returning id;', [name, nationality, music_styles])
-                .then(res => res)
-                .catch(err => err);
+            try {
+                const text = 'INSERT INTO mobile_app.artists(name, nationality, music_styles) VALUES ($1, $2, $3) returning id;';
+                const values = [name, nationality, music_styles];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    updateArtist(id, name, nationality, music_styles) {
+    updateArtist(id, name, nationality, music_styles, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('UPDATE mobile_app.artists set name=$1, nationality=$2, music_styles=$3 WHERE id=$4;', [name, nationality, music_styles, id])
-                .then(res => res)
-                .catch(err => console.log(err));
+            try {
+                const text = 'UPDATE mobile_app.artists set name=$1, nationality=$2, music_styles=$3 WHERE id=$4;';
+                const values = [name, nationality, music_styles, id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
-    deleteArtist(id) {
+    deleteArtist(id, pool, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield pool.query('DELETE FROM mobile_app.artists WHERE id=$1;', [id])
-                .then(res => res)
-                .catch(err => console.log(err));
+            try {
+                const text = 'DELETE FROM mobile_app.artists WHERE id=$1;';
+                const values = [id];
+                return yield pool.query(text, values);
+            }
+            catch (err) {
+                if ((0, SQLErrorHandler_1.instanceOfpgError)(err)) {
+                    switch (err.code) {
+                        default:
+                            return (0, SQLErrorHandler_1.SQLErrorHandler)(next, "unknown error");
+                    }
+                }
+                else {
+                    return next(new customError_1.CustomError(500, "General", "internal server error from the PostgreSQL Server"));
+                }
+            }
         });
     }
 }

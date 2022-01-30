@@ -11,17 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.performingEventController = void 0;
 const performing_event_1 = require("../services/performing-event");
-const customError_1 = require("../responses/customError");
-const dotenv = require('dotenv');
-dotenv.config();
+const customError_1 = require("../types/errors/customError");
+require("dotenv/config");
 class PerformingEventController {
     addPerformingEvent(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { artist_id, event_id } = req.body;
-                const rowCreated = yield performing_event_1.performingEventService.addPerformingEvent(artist_id, event_id);
-                res.location('http://' + process.env.PGHOST + ':' + process.env.SERVERPORT + req.originalUrl + '/' + rowCreated.rows[0].id);
-                res.status(201).json();
+                const pool = req.pool;
+                const rowCreated = yield performing_event_1.performingEventService.addPerformingEvent(artist_id, event_id, pool, next);
+                if (typeof rowCreated === 'undefined') {
+                    return;
+                }
+                else {
+                    res.location('http://' + process.env.PGHOST + ':' + process.env.SERVERPORT + req.originalUrl + '/' + rowCreated.rows[0].id);
+                    res.status(201).json();
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));
@@ -32,12 +37,17 @@ class PerformingEventController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { artist_id, event_id } = req.body;
-                const rowDeleted = yield performing_event_1.performingEventService.delPerformingEvent(artist_id, event_id);
-                if (rowDeleted.rowCount === 0) {
+                const pool = req.pool;
+                const rowDeleted = yield performing_event_1.performingEventService.delPerformingEvent(artist_id, event_id, pool, next);
+                if (typeof rowDeleted === 'undefined') {
+                    return;
+                }
+                else if (rowDeleted.rowCount === 0) {
                     return next(new customError_1.CustomError(404, 'General', 'no follow find with these ids, can\'t delete it'));
                 }
-                else
+                else {
                     res.status(204).json();
+                }
             }
             catch (err) {
                 return next(new customError_1.CustomError(500, 'General', 'server error'));
